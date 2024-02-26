@@ -150,9 +150,7 @@ function getCopyTargets(
     ...(shouldIncludeSnow
       ? [
           {
-            src: shouldIncludeSnow
-              ? `./node_modules/@lavamoat/snow/snow.prod.js`
-              : EMPTY_JS_FILE,
+            src: `./node_modules/@lavamoat/snow/snow.prod.js`,
             dest: `scripts/snow.js`,
           },
           {
@@ -217,7 +215,7 @@ function getCopyTargets(
     {
       src: './development',
       pattern: '/chromereload.js',
-      dest: ``,
+      dest: `scripts/`,
     },
     // empty files to suppress missing file errors
     {
@@ -235,7 +233,7 @@ function getCopyTargets(
     // empty files to suppress missing file errors
     {
       src: EMPTY_JS_FILE,
-      dest: `chromereload.js`,
+      dest: `scripts/chromereload.js`,
     },
   ];
 

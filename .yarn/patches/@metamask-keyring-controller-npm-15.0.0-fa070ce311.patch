@@ -1,5 +1,5 @@
 diff --git a/dist/chunk-52QZQQKP.mjs b/dist/chunk-52QZQQKP.mjs
-index 934f432c8013a6af5303726e1495bed2335fa078..8de2560fe81dfc3dbfef83dd0079482306c425d9 100644
+index 934f432c8013a6af5303726e1495bed2335fa078..4570ab87b587920d2b2c8ae01095fab2c37b14c6 100644
 --- a/dist/chunk-52QZQQKP.mjs
 +++ b/dist/chunk-52QZQQKP.mjs
 @@ -2,7 +2,8 @@ import {
@@ -12,6 +12,15 @@ index 934f432c8013a6af5303726e1495bed2335fa078..8de2560fe81dfc3dbfef83dd00794823
  } from "./chunk-NAAWD7HX.mjs";
  
  // src/KeyringController.ts
+@@ -55,7 +56,7 @@ function keyringBuilderFactory(KeyringConstructor) {
+   return builder;
+ }
+ var defaultKeyringBuilders = [
+-  keyringBuilderFactory(SimpleKeyring),
++  keyringBuilderFactory(SimpleKeyring.default),
+   keyringBuilderFactory(HDKeyring)
+ ];
+ var getDefaultKeyringState = () => {
 @@ -582,6 +583,18 @@ var KeyringController = class extends BaseController {
        })
      );
