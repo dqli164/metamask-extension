@@ -13,6 +13,12 @@ executors:
     resource_class: medium
     environment:
       NODE_OPTIONS: --max_old_space_size=3072
+  node-linux-medium:
+    machine:
+      image: ubuntu-2204:2024.04.4
+    resource_class: large
+    environment:
+      NODE_OPTIONS: --max_old_space_size=8192
   node-browsers-medium-plus:
     docker:
       - image: cimg/node:20.11-browsers
@@ -130,6 +136,9 @@ workflows:
       - prep-build-test:
           requires:
             - prep-deps
+      - prep-build-test-webpack:
+          requires:
+            - prep-deps
       - prep-build-multichain-test:
           requires:
             - prep-deps
@@ -165,6 +174,9 @@ workflows:
       - test-lint-changelog:
           requires:
             - prep-deps
+      - test-e2e-chrome-webpack:
+          requires:
+            - prep-build-test-webpack
       - test-e2e-chrome:
           requires:
             - prep-build-test
@@ -215,6 +227,9 @@ workflows:
       - test-unit-mocha:
           requires:
             - prep-deps
+      - test-unit-webpack:
+          requires:
+            - prep-deps
       - test-unit-jest-main:
           requires:
             - prep-deps
@@ -226,6 +241,7 @@ workflows:
             - test-unit-jest-main
             - test-unit-jest-development
             - test-unit-mocha
+            - test-unit-webpack
       - test-unit-global:
           requires:
             - prep-deps
@@ -280,6 +296,7 @@ workflows:
             - test-unit-jest-development
             - test-unit-global
             - test-unit-mocha
+            - test-unit-webpack
             - upload-and-validate-coverage
             - validate-source-maps
             - validate-source-maps-beta
@@ -289,6 +306,7 @@ workflows:
             - test-mozilla-lint
             - test-mozilla-lint-desktop
             - test-mozilla-lint-flask
+            - test-e2e-chrome-webpack
             - test-e2e-chrome
             - test-e2e-chrome-multichain
             - test-e2e-chrome-multiple-providers
@@ -762,6 +780,26 @@ jobs:
             - dist-test
             - builds-test
 
+  prep-build-test-webpack:
+    executor: node-linux-medium
+    steps:
+      - run: *shallow-git-clone
+      - attach_workspace:
+          at: .
+      - run:
+          name: activate yarn
+          command: corepack enable
+      - run:
+          name: Build extension for testing
+          command: yarn build:test:webpack
+      - run:
+          name: Move test build to 'dist-test-webpack' to avoid conflict with production build
+          command: mv ./dist ./dist-test-webpack
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist-test-webpack
+
   prep-build-multichain-test:
     executor: node-browsers-medium-plus
     steps:
@@ -935,6 +973,30 @@ jobs:
       - run:
           name: depcheck
           command: yarn depcheck
+
+  test-e2e-chrome-webpack:
+    executor: node-browsers-medium-plus
+    parallelism: 20
+    steps:
+      - run: *shallow-git-clone
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move test build to dist
+          command: mv ./dist-test-webpack ./dist
+      - run:
+          name: test:e2e:chrome:webpack
+          command: |
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              timeout 20m yarn test:e2e:chrome:webpack --retries 2
+            fi
+          no_output_timeout: 5m
+      - store_artifacts:
+          path: test-artifacts
+          destination: test-artifacts
+      - store_test_results:
+          path: test/test-results/e2e
 
   test-e2e-chrome:
     executor: node-browsers-medium-plus
@@ -1321,7 +1383,6 @@ jobs:
       - store_test_results:
           path: test/test-results/e2e
 
-
   benchmark:
     executor: node-browsers-small
     steps:
@@ -1532,6 +1593,20 @@ jobs:
           root: .
           paths:
             - .nyc_output
+            - coverage
+
+  test-unit-webpack:
+    executor: node-browsers-small
+    steps:
+      - run: *shallow-git-clone
+      - attach_workspace:
+          at: .
+      - run:
+          name: test:coverage:webpack
+          command: yarn test:coverage:webpack
+      - persist_to_workspace:
+          root: .
+          paths:
             - coverage
 
   test-unit-jest-development:
