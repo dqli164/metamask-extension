@@ -399,6 +399,9 @@
   "allow": {
     "message": "Allow"
   },
+  "allowMetaMaskToDetectTokens": {
+    "message": "Allow MetaMask to detect and display your tokens with autodetection.You’ll be able to:"
+  },
   "allowMmiToConnectToCustodian": {
     "message": "This will allow MMI to connect to $1 to import your accounts."
   },
@@ -1517,6 +1520,9 @@
   "displayNftMediaDescription": {
     "message": "Displaying NFT media and data exposes your IP address to OpenSea or other third parties. This can allow attackers to associate your IP address with your Ethereum address. NFT autodetection relies on this setting, and won't be available when this is turned off."
   },
+  "diveStraightIntoUsingYourTokens": {
+    "message": "Dive straight into using your tokens"
+  },
   "doNotShare": {
     "message": "Do not share this with anyone"
   },
@@ -1647,6 +1653,9 @@
   },
   "editSpeedUpEditGasFeeModalTitle": {
     "message": "Edit speed up gas fee"
+  },
+  "effortlesslyNavigateYourDigitalAssets": {
+    "message": "Effortlessly navigate your digital assets"
   },
   "enable": {
     "message": "Enable"
@@ -2151,6 +2160,9 @@
   },
   "imToken": {
     "message": "imToken"
+  },
+  "immediateAccessToYourTokens": {
+    "message": "Immediately access to your tokens"
   },
   "import": {
     "message": "Import",
