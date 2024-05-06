@@ -82,12 +82,12 @@ const HeaderInfo = () => {
             ariaLabel={t('accountDetails')}
             color={IconColor.iconDefault}
             iconName={IconName.Info}
-            data-testid="header-info-button"
             size={ButtonIconSize.Md}
             onClick={() => {
               trackAccountModalOpened();
               setShowAccountInfo(true);
             }}
+            data-testid="header-info__account-details-button"
           />
         </Tooltip>
       </Box>
@@ -127,6 +127,9 @@ const HeaderInfo = () => {
                   variant={TextVariant.bodyMd}
                   color={TextColor.textDefault}
                   marginTop={2}
+                  data-testid={
+                    'header-info__account-details-modal__account-name'
+                  }
                 >
                   {fromName}
                 </Text>
@@ -138,6 +141,7 @@ const HeaderInfo = () => {
                   size={ButtonIconSize.Sm}
                   className="confirm_header__close-button"
                   onClick={() => setShowAccountInfo(false)}
+                  data-testid="header-info__account-details-modal__close-button"
                 />
               </Box>
             </Box>
@@ -149,7 +153,7 @@ const HeaderInfo = () => {
             <ConfirmInfoRow label="Balance">
               <ConfirmInfoRowCurrency
                 value={balanceToUse ?? 0}
-                dataTestId="header-balance"
+                data-testid="header-info__account-details-modal__account-balance"
               />
             </ConfirmInfoRow>
           </ModalBody>
