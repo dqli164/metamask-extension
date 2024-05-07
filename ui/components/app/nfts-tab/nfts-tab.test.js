@@ -9,6 +9,11 @@ import { setBackgroundConnection } from '../../../store/background-connection';
 import { CHAIN_IDS, NETWORK_TYPES } from '../../../../shared/constants/network';
 import NftsTab from '.';
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: jest.fn(() => []),
+}));
+
 const ETH_BALANCE = '0x16345785d8a0000'; // 0.1 ETH
 
 const NFTS = [
@@ -220,12 +225,15 @@ describe('NFT Items', () => {
   });
   const historyPushMock = jest.fn();
 
-  jest
-    .spyOn(reactRouterDom, 'useHistory')
-    .mockImplementation()
-    .mockReturnValue({ push: historyPushMock });
+  beforeEach(() => {
+    jest
+      .spyOn(reactRouterDom, 'useHistory')
+      .mockImplementation()
+      .mockReturnValue({ push: historyPushMock });
+  });
 
   afterEach(() => {
+    jest.resetAllMocks();
     jest.clearAllMocks();
   });
 

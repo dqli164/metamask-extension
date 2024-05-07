@@ -5,6 +5,10 @@ import Router from 'react-router-dom';
 import { renderHookWithProvider } from '../../../../test/lib/render-helpers';
 import useCurrentConfirmation from './useCurrentConfirmation';
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+}));
+
 const mockState = {
   metamask: {
     unapprovedPersonalMsgs: {

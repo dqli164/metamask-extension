@@ -6,6 +6,11 @@ import mockState from '../../../test/data/mock-state.json';
 import { EXTENSION_ERROR_PAGE_TYPES } from '../../../shared/constants/desktop';
 import DesktopErrorPage from '.';
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: jest.fn(() => []),
+}));
+
 describe('Desktop Error page', () => {
   const mockHistoryPush = jest.fn();
 

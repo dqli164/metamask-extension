@@ -21,6 +21,11 @@ jest.mock('../../../../app/scripts/lib/util', () => ({
 }));
 ///: END:ONLY_INCLUDE_IF
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: jest.fn(() => []),
+}));
+
 const render = (props = { onClose: () => jest.fn() }) => {
   const store = configureStore({
     ...mockState,
@@ -69,12 +74,15 @@ const render = (props = { onClose: () => jest.fn() }) => {
 describe('AccountListMenu', () => {
   const historyPushMock = jest.fn();
 
-  jest
-    .spyOn(reactRouterDom, 'useHistory')
-    .mockImplementation()
-    .mockReturnValue({ push: historyPushMock });
+  beforeEach(() => {
+    jest
+      .spyOn(reactRouterDom, 'useHistory')
+      .mockImplementation()
+      .mockReturnValue({ push: historyPushMock });
+  });
 
   afterEach(() => {
+    jest.resetAllMocks();
     jest.clearAllMocks();
   });
 

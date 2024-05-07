@@ -23,6 +23,11 @@ jest.mock('../../store/actions', () => {
 
 jest.mock('../../hooks/useCopyToClipboard');
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: jest.fn(() => []),
+}));
+
 const mockedActions = actions;
 
 describe('Desktop Pairing page', () => {
