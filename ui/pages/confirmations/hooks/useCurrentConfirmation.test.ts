@@ -48,6 +48,16 @@ const mockState = {
 };
 
 describe('useCurrentConfirmation', () => {
+  beforeAll(() => {
+    jest.resetAllMocks();
+    jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+    jest.clearAllMocks();
+  });
+
   it('should return current confirmation', () => {
     const { result } = renderHookWithProvider(
       () => useCurrentConfirmation(),
