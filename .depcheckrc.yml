@@ -73,6 +73,8 @@ ignores:
   - 'stream-http' # polyfill
   - 'rimraf' # misc: install helper
   - 'json-schema-to-ts' # misc: typescript helper
+  - 'https-browserify' # polyfill
+  - 'path-browserify' # polyfill
   # babel
   - '@babel/plugin-transform-logical-assignment-operators'
   # trezor
