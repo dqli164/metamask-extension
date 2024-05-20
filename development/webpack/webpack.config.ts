@@ -244,6 +244,8 @@ const config = {
   // note: loaders in a `use` array are applied in *reverse* order, i.e., bottom
   // to top, (or right to left depending on the current formatting of the file)
   module: {
+    // don't parse lodash, as it's large and already minified
+    noParse: /^lodash$/u,
     rules: [
       // json
       { test: /\.json$/u, type: 'json' },
