@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { ButtonVariant } from '@metamask/snaps-sdk';
+
 import {
   Box,
   Button,
@@ -184,6 +185,11 @@ function AlertHeader({
   );
 }
 
+function BlockaidAlertDetails() {
+  const t = useI18nContext();
+  return <Text textAlign={TextAlign.Center}>{t('blockaidAlertInfo')}</Text>;
+}
+
 function AlertDetails({
   selectedAlert,
   customDetails,
@@ -328,11 +334,7 @@ export function AlertModal({
   customAcknowledgeButton,
   enableProvider = true,
 }: AlertModalProps) {
-  const {
-    isAlertConfirmed,
-    setAlertConfirmed,
-    fieldAlerts: alerts,
-  } = useAlerts(ownerId);
+  const { isAlertConfirmed, setAlertConfirmed, alerts } = useAlerts(ownerId);
 
   const handleClose = useCallback(() => {
     onClose();
@@ -362,10 +364,14 @@ export function AlertModal({
         />
         <AlertHeader selectedAlert={selectedAlert} customTitle={customTitle} />
         <ModalBody>
-          <AlertDetails
-            selectedAlert={selectedAlert}
-            customDetails={customDetails}
-          />
+          {selectedAlert?.provider === SecurityProvider.Blockaid ? (
+            <BlockaidAlertDetails />
+          ) : (
+            <AlertDetails
+              selectedAlert={selectedAlert}
+              customDetails={customDetails}
+            />
+          )}
           {customAcknowledgeCheckbox ?? (
             <AcknowledgeCheckboxBase
               selectedAlert={selectedAlert}
