@@ -3,11 +3,11 @@ import React from 'react';
 import { fireEvent, renderWithProvider, waitFor } from '../../../../test/jest';
 import configureStore from '../../../store/store';
 import mockState from '../../../../test/data/mock-state.json';
-import { CreateAccount } from '.';
+import { CreateEthAccount } from '.';
 
 const render = (props = { onActionComplete: () => jest.fn() }) => {
   const store = configureStore(mockState);
-  return renderWithProvider(<CreateAccount {...props} />, store);
+  return renderWithProvider(<CreateEthAccount {...props} />, store);
 };
 
 const mockAddNewAccount = jest.fn().mockReturnValue({ type: 'TYPE' });
@@ -18,7 +18,7 @@ jest.mock('../../../store/actions', () => ({
   setAccountLabel: (...args) => mockSetAccountLabel(...args),
 }));
 
-describe('CreateAccount', () => {
+describe('CreateEthAccount', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
