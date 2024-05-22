@@ -221,11 +221,15 @@ workflows:
       - test-unit-jest-development:
           requires:
             - prep-deps
+      - test-integration-main:
+          requires:
+            - prep-deps
       - upload-and-validate-coverage:
           requires:
             - test-unit-jest-main
             - test-unit-jest-development
             - test-unit-mocha
+            - test-integration-main
       - test-unit-global:
           requires:
             - prep-deps
@@ -280,6 +284,7 @@ workflows:
             - test-unit-jest-development
             - test-unit-global
             - test-unit-mocha
+            - test-integration-main
             - upload-and-validate-coverage
             - validate-source-maps
             - validate-source-maps-beta
@@ -1566,6 +1571,23 @@ jobs:
             - coverage
       - store_test_results:
           path: test/test-results/junit.xml
+
+  test-integration-main:
+    executor: node-browsers-medium-plus
+    parallelism: 8
+    steps:
+      - run: *shallow-git-clone
+      - attach_workspace:
+          at: .
+      - run:
+          name: test:integration:coverage
+          command: yarn test:integration:coverage
+      - persist_to_workspace:
+          root: .
+          paths:
+            - coverage
+      - store_test_results:
+          path: test/test-results/integration/junit.xml
 
   upload-and-validate-coverage:
     executor: node-browsers-small
