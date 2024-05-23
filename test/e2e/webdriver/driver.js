@@ -603,11 +603,40 @@ class Driver {
       title,
     );
 
-    let windowHandles = await this.driver.getAllWindowHandles();
+    // let windowHandles = await this.driver.getAllWindowHandles();
 
-    console.log('windowHandles', windowHandles);
+    // console.log('windowHandles', windowHandles);
 
-    await this.driver.switchTo().window(windowHandles[switchToIndex]);
+    // await this.driver.switchTo().window(windowHandles[switchToIndex]);
+
+    let windowHandles =
+      initialWindowHandles || (await this.driver.getAllWindowHandles());
+    let timeElapsed = 0;
+
+    while (timeElapsed <= timeout) {
+      for (const handle of windowHandles) {
+        const handleTitle = await retry(
+          {
+            retries,
+            delay: retryDelay,
+          },
+          async () => {
+            await this.driver.switchTo().window(handle);
+            return await this.driver.getTitle();
+          },
+        );
+
+        if (handleTitle === title) {
+          return handle;
+        }
+      }
+      await this.delay(delayStep);
+      timeElapsed += delayStep;
+      // refresh the window handles
+      windowHandles = await this.driver.getAllWindowHandles();
+    }
+
+    throw new Error(`No window with title: ${title}`);
   }
 
   async switchToWindowWithUrl(
