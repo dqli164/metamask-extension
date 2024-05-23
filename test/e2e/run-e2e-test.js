@@ -146,7 +146,7 @@ async function main() {
         'mocha',
         `--config=${configFile}`,
         `--timeout=${testTimeoutInMilliseconds}`,
-        '--reporter=mocha-junit-reporter',
+        //'--reporter=mocha-junit-reporter',
         '--reporter-options',
         `mochaFile=test/test-results/e2e/[hash].xml,toConsole=true`,
         ...extraArgs,
