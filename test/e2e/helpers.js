@@ -17,6 +17,7 @@ const GanacheSeeder = require('./seeder/ganache-seeder');
 const { Bundler } = require('./bundler');
 const { SMART_CONTRACTS } = require('./seeder/smart-contracts');
 const { ERC_4337_ACCOUNT } = require('./constants');
+const { getSocketServer } = require('./background-socket/mocha-socket-server');
 
 const tinyDelayMs = 200;
 const regularDelayMs = tinyDelayMs * 2;
@@ -61,6 +62,7 @@ async function withFixtures(options, testSuite) {
   let numberOfDapps = dapp ? 1 : 0;
   const dappServer = [];
   const phishingPageServer = new PhishingWarningPageServer();
+  getSocketServer();
 
   let webDriver;
   let driver;

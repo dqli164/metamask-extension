@@ -12,6 +12,7 @@ const cssToXPath = require('css-to-xpath');
 const { sprintf } = require('sprintf-js');
 const { retry } = require('../../../development/lib/retry');
 const { quoteXPathText } = require('../../helpers/quoteXPathText');
+const { getSocketServer } = require('../background-socket/mocha-socket-server');
 
 const PAGES = {
   BACKGROUND: 'background',
@@ -598,34 +599,15 @@ class Driver {
     timeout = this.timeout,
     { retries = 8, retryDelay = 2500 } = {},
   ) {
-    let windowHandles =
-      initialWindowHandles || (await this.driver.getAllWindowHandles());
-    let timeElapsed = 0;
+    const switchToIndex = await getSocketServer().switchToWindowWithTitle(
+      title,
+    );
 
-    while (timeElapsed <= timeout) {
-      for (const handle of windowHandles) {
-        const handleTitle = await retry(
-          {
-            retries,
-            delay: retryDelay,
-          },
-          async () => {
-            await this.driver.switchTo().window(handle);
-            return await this.driver.getTitle();
-          },
-        );
+    let windowHandles = await this.driver.getAllWindowHandles();
 
-        if (handleTitle === title) {
-          return handle;
-        }
-      }
-      await this.delay(delayStep);
-      timeElapsed += delayStep;
-      // refresh the window handles
-      windowHandles = await this.driver.getAllWindowHandles();
-    }
+    console.log('windowHandles', windowHandles);
 
-    throw new Error(`No window with title: ${title}`);
+    await this.driver.switchTo().window(windowHandles[switchToIndex]);
   }
 
   async switchToWindowWithUrl(
