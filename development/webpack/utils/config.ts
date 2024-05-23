@@ -49,6 +49,8 @@ function loadEnv(rcFilePath: string): Map<string, unknown> {
  * @returns
  */
 export function getVariables(args: Args, buildTypes: Build) {
+  // TODO: load process.env args into the variables.
+
   const { env, test, type, sentry, snow, lavamoat } = args;
   const variables = loadConfigVars(type, buildTypes);
   const version = getMetaMaskVersion();
@@ -90,6 +92,16 @@ export function getVariables(args: Args, buildTypes: Build) {
   variables.set('ENABLE_SENTRY', sentry.toString());
   variables.set('ENABLE_SNOW', snow.toString());
   variables.set('ENABLE_LAVAMOAT', lavamoat.toString());
+
+  // TODO: remove these once process.env is automatically added to the variables
+  variables.set(
+    'BLOCKAID_FILE_CDN',
+    'static.cx.metamask.io/api/v1/confirmations/ppom',
+  );
+  variables.set('SEGMENT_HOST', 'https://api.segment.io');
+  variables.set('SEGMENT_WRITE_KEY', 'FAKE');
+  variables.set('SENTRY_DSN_DEV', 'https://fake@sentry.io/0000000');
+  // END TODO: remove these once process.env is automatically added to the variables
 
   // convert the variables to a format that can be used by SWC, which expects
   // values be JSON stringified, as it JSON.parses them internally.
