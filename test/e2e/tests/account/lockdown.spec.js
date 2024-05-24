@@ -62,7 +62,7 @@ describe('lockdown', function () {
     ],
   };
 
-  it.only('the UI and background environments are locked down', async function () {
+  it('the UI and background environments are locked down', async function () {
     await withFixtures(
       {
         // The fixtures used here is arbitrary. Any fixture would do.
