@@ -477,6 +477,7 @@
     "@tsconfig/node20": "^20.1.2",
     "@types/babelify": "^7.3.7",
     "@types/browserify": "^12.0.37",
+    "@types/chrome": "^0.0.268",
     "@types/currency-formatter": "^1.5.1",
     "@types/end-of-stream": "^1.4.1",
     "@types/fs-extra": "^9.0.13",

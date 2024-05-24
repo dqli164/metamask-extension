@@ -49,12 +49,10 @@ class BackgroundToMochaClient {
   }
 
   findIndexOfTabWithTitle(title: string) {
-    chrome.tabs.query({}, (tabs: { title: string }[]) => {
+    chrome.tabs.query({}, (tabs) => {
       console.log('Switching to tab:', tabs);
 
-      const index = tabs.findIndex(
-        (tab: { title: string }) => tab.title === title,
-      );
+      const index = tabs.findIndex((tab) => tab.title === title);
 
       if (index === -1) {
         //recursively call this function in 500ms increments until the tab is found
