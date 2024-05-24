@@ -599,10 +599,9 @@ class Driver {
     timeout = this.timeout,
     { retries = 8, retryDelay = 2500 } = {},
   ) {
-    const switchToIndex = await getSocketServer().switchToWindowWithTitle(
-      title,
-    );
-    console.log('switchToIndex', switchToIndex);
+    // const switchToIndex = await getSocketServer().switchToWindowWithTitle(
+    //   title,
+    // );
 
     // let windowHandles = await this.driver.getAllWindowHandles();
 
