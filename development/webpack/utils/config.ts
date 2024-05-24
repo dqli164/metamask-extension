@@ -60,7 +60,7 @@ function addRc(definitions: Map<string, unknown>, rcFilePath: string): void {
  * @returns
  */
 export function getVariables(args: Args, buildTypes: Build) {
-  const { env, test, type, sentry, snow, lavamoat } = args;
+  const { env, test, type, sentry, snow, lavamoat, lockdown } = args;
   const variables = loadConfigVars(type, buildTypes);
   const version = getMetaMaskVersion();
 
@@ -101,6 +101,7 @@ export function getVariables(args: Args, buildTypes: Build) {
   variables.set('ENABLE_SENTRY', sentry.toString());
   variables.set('ENABLE_SNOW', snow.toString());
   variables.set('ENABLE_LAVAMOAT', lavamoat.toString());
+  variables.set('ENABLE_LOCKDOWN', lockdown.toString());
 
   // convert the variables to a format that can be used by SWC, which expects
   // values be JSON stringified, as it JSON.parses them internally.

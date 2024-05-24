@@ -15,6 +15,12 @@ if (process.env.ENABLE_LAVAMOAT === 'true') {
     require('@lavamoat/snow/snow.prod');
     require('../use-snow');
   }
+  if (process.env.ENABLE_LOCKDOWN === 'true') {
+    require('../lockdown-install');
+    require('../lockdown-run');
+    require('../lockdown-more');
+  }
+
   require('../init-globals');
   require('../runtime-cjs');
 }
