@@ -9,22 +9,19 @@ export function getBackgroundToMochaClient() {
 }
 
 export function startBackgroundToMochaClient() {
-  _backgroundToMochaClient = new BackgroundToMochaClient();
+  if (process.env.IN_TEST) {
+    _backgroundToMochaClient = new BackgroundToMochaClient();
+  }
 }
 
 class BackgroundToMochaClient {
   private client: WebSocket;
 
   constructor() {
-    if (!process.env.IN_TEST) {
-      return;
-    }
-
     this.client = new WebSocket('ws://localhost:8111');
 
     this.client.onopen = () => {
       console.log('WebSocket connection opened');
-      this.send({ command: 'hello' });
     };
 
     this.client.onmessage = (event) => {
@@ -33,7 +30,7 @@ class BackgroundToMochaClient {
       console.log('Received message:', msg);
 
       if (msg.command === 'queryTabs') {
-        chrome.tabs.query({ title: msg.title }, (tabs) => {
+        chrome.tabs.query({ title: msg.title }, (tabs: any) => {
           console.log('Sending tabs:', tabs);
           this.send({ command: 'openTabs', tabs });
         });
@@ -52,10 +49,12 @@ class BackgroundToMochaClient {
   }
 
   findIndexOfTabWithTitle(title: string) {
-    chrome.tabs.query({}, (tabs) => {
+    chrome.tabs.query({}, (tabs: { title: string }[]) => {
       console.log('Switching to tab:', tabs);
 
-      const index = tabs.findIndex((tab) => tab.title === title);
+      const index = tabs.findIndex(
+        (tab: { title: string }) => tab.title === title,
+      );
 
       if (index === -1) {
         //recursively call this function in 500ms increments until the tab is found

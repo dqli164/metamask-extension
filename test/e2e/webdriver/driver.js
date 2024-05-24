@@ -599,6 +599,11 @@ class Driver {
     timeout = this.timeout,
     { retries = 8, retryDelay = 2500 } = {},
   ) {
+    // This is just to test the flow right now
+    getSocketServer().switchToWindowWithTitle(title);
+
+    // This is what will eventually run
+    //
     // const switchToIndex = await getSocketServer().switchToWindowWithTitle(
     //   title,
     // );
