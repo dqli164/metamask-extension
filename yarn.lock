@@ -25726,7 +25726,7 @@ __metadata:
     nanoid: "npm:^2.1.6"
     nock: "npm:^13.2.9"
     node-fetch: "npm:^2.6.1"
-    node-pty: "npm:^1.1.0-beta12"
+    node-pty: "npm:^1.1.0-beta14"
     nyc: "npm:^15.1.0"
     obj-multiplex: "npm:^1.0.0"
     path-browserify: "npm:^1.0.1"
@@ -27186,7 +27186,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-pty@npm:^1.1.0-beta12":
+"node-pty@npm:^1.1.0-beta14":
   version: 1.1.0-beta9
   resolution: "node-pty@npm:1.1.0-beta9"
   dependencies:

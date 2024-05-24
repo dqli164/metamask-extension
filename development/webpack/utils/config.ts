@@ -23,20 +23,31 @@ function coerce(value: string) {
 }
 
 /**
- * @param rcFilePath - The path to the rc file.
- * @returns The definitions loaded from the rc file.
+ * @returns The definitions loaded from process.env.
  */
-function loadEnv(rcFilePath: string): Map<string, unknown> {
+function loadEnv(): Map<string, unknown> {
   const definitions = new Map<string, unknown>();
+  Object.entries(process.env).forEach(([key, value]) => {
+    if (typeof value === 'undefined') return;
+    definitions.set(key, coerce(value));
+  });
+  return definitions;
+}
+
+/**
+ * @param definitions
+ * @param rcFilePath - The path to the rc file.
+ */
+function addRc(definitions: Map<string, unknown>, rcFilePath: string): void {
   try {
     const rc = parse(readFileSync(rcFilePath, 'utf8'));
-    Object.entries(rc).forEach(([key, value]) =>
-      definitions.set(key, coerce(value)),
-    );
+    Object.entries(rc).forEach(([key, value]) => {
+      if (definitions.has(key)) return;
+      definitions.set(key, coerce(value));
+    });
   } catch {
     // ignore
   }
-  return definitions;
 }
 
 /**
@@ -49,8 +60,6 @@ function loadEnv(rcFilePath: string): Map<string, unknown> {
  * @returns
  */
 export function getVariables(args: Args, buildTypes: Build) {
-  // TODO: load process.env args into the variables.
-
   const { env, test, type, sentry, snow, lavamoat } = args;
   const variables = loadConfigVars(type, buildTypes);
   const version = getMetaMaskVersion();
@@ -92,16 +101,6 @@ export function getVariables(args: Args, buildTypes: Build) {
   variables.set('ENABLE_SENTRY', sentry.toString());
   variables.set('ENABLE_SNOW', snow.toString());
   variables.set('ENABLE_LAVAMOAT', lavamoat.toString());
-
-  // TODO: remove these once process.env is automatically added to the variables
-  variables.set(
-    'BLOCKAID_FILE_CDN',
-    'static.cx.metamask.io/api/v1/confirmations/ppom',
-  );
-  variables.set('SEGMENT_HOST', 'https://api.segment.io');
-  variables.set('SEGMENT_WRITE_KEY', 'FAKE');
-  variables.set('SENTRY_DSN_DEV', 'https://fake@sentry.io/0000000');
-  // END TODO: remove these once process.env is automatically added to the variables
 
   // convert the variables to a format that can be used by SWC, which expects
   // values be JSON stringified, as it JSON.parses them internally.
@@ -146,6 +145,15 @@ export function getBuildTypes(): Build {
 }
 
 /**
+ * Loads configuration variables from process.env, .metamaskrc, and build.yml.
+ *
+ * The order of precedence is:
+ * 1. process.env
+ * 2. .metamaskrc
+ * 3. build.yml
+ *
+ * i.e., if a variable is defined in `process.env`, it will take precedence over
+ * the same variable defined in `.metamaskrc` or `build.yml`.
  *
  * @param type
  * @param build
@@ -157,18 +165,18 @@ export function getBuildTypes(): Build {
 function loadConfigVars(type: string, { env, buildTypes, features }: Build) {
   const activeBuild = buildTypes[type];
 
-  const definitions = loadEnv(join(__dirname, '../../../.metamaskrc'));
+  const definitions = loadEnv();
+  addRc(definitions, join(__dirname, '../../../.metamaskrc'));
   addVars(activeBuild.env);
   activeBuild.features?.forEach((feature) => addVars(features[feature]?.env));
   addVars(env);
 
-  function addVars(pairs?: (string | { [k: string]: unknown })[]): void {
+  function addVars(pairs?: (string | Record<string, unknown>)[]): void {
     pairs?.forEach((pair) => {
       if (typeof pair === 'string') return;
       Object.entries(pair).forEach(([key, value]) => {
-        if (!definitions.has(key)) {
-          definitions.set(key, value);
-        }
+        if (definitions.has(key)) return;
+        definitions.set(key, value);
       });
     });
   }

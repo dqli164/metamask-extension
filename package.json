@@ -601,7 +601,7 @@
     "mockttp": "^3.10.1",
     "nock": "^13.2.9",
     "node-fetch": "^2.6.1",
-    "node-pty": "^1.1.0-beta12",
+    "node-pty": "^1.1.0-beta14",
     "nyc": "^15.1.0",
     "path-browserify": "^1.0.1",
     "postcss": "^8.4.32",
