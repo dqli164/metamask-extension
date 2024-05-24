@@ -67,6 +67,8 @@ aliases:
         git checkout -B "$CIRCLE_BRANCH" "$CIRCLE_SHA1"
       fi
 
+      corepack enable --install-directory ~/
+
   # Check if MMI Optional tests should run
   - &check-mmi-optional
     name: Check if MMI Optional tests should run
@@ -1046,7 +1048,7 @@ jobs:
           path: test-artifacts
           destination: test-artifacts
       - store_test_results:
-                path: test/test-results/e2e
+          path: test/test-results/e2e
 
   test-e2e-chrome-rpc:
     executor: node-browsers-medium
@@ -1320,7 +1322,6 @@ jobs:
           destination: test-artifacts
       - store_test_results:
           path: test/test-results/e2e
-
 
   benchmark:
     executor: node-browsers-small
