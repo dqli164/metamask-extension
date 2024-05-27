@@ -64,3 +64,6 @@ ui/selectors/institutional           @MetaMask/mmi
 # Design System to own code for the component-library folder
 # Slack handle: @metamask-design-system-team | Slack channel: #metamask-design-system
 ui/components/component-library      @MetaMask/design-system-engineers
+
+# Swaps team to own code for the swaps folder
+ui/pages/swaps                      @MetaMask/swaps-engineers
