@@ -14,6 +14,19 @@ const { DEFAULT_FIXTURE_ACCOUNT, ERC_4337_ACCOUNT } = require('./constants');
 function defaultFixture(inputChainId = CHAIN_IDS.LOCALHOST) {
   return {
     data: {
+      AuthenticationController: {
+        isSignedIn: true,
+      },
+      UserStorageController: {
+        isProfileSyncingEnabled: true,
+      },
+      MetamaskNotificationsController: {
+        isFeatureAnnouncementsEnabled: false,
+        isMetamaskNotificationsEnabled: false,
+        isMetamaskNotificationsFeatureSeen: false,
+        metamaskNotificationsList: [],
+        metamaskNotificationsReadList: [],
+      },
       AccountsController: {
         internalAccounts: {
           selectedAccount: 'd5e45e4a-3b04-4a09-a5e1-39762e5c6be4',
@@ -223,6 +236,9 @@ function defaultFixture(inputChainId = CHAIN_IDS.LOCALHOST) {
         ignoredTokens: [],
         tokens: [],
       },
+      // TokenRatesController: {
+      //   contractExchangeRates: {},
+      // },
       TransactionController: {
         transactions: {},
       },
@@ -933,6 +949,11 @@ class FixtureBuilder {
     merge(this.fixture.data.TokensController, data);
     return this;
   }
+
+  // withTokenRatesController(data) {
+  //   merge(this.fixture.data.TokenRatesController, data);
+  //   return this;
+  // }
 
   withBadPreferencesControllerState() {
     merge(this.fixture.data, {
