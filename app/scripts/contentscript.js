@@ -234,6 +234,7 @@ const setupExtensionStreams = () => {
   });
 
   // forward communication across inpage-background for these channels only
+  // pageChannel是页面脚本与内容脚本之间的通信通道,这里将`pageChannel`的数据通过`extensionChannel`传递,从而使页面脚本能够与背景脚本通信
   extensionChannel = extensionMux.createStream(PROVIDER);
   pump(pageChannel, extensionChannel, pageChannel, (error) =>
     console.debug(
