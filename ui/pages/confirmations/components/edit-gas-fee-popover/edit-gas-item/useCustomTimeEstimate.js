@@ -62,10 +62,10 @@ export const useCustomTimeEstimate = ({
     return {};
   }
 
-  const { low = {}, medium = {}, high = {} } = gasFeeEstimates;
   let waitTimeEstimate = '';
 
   if (
+    gasFeeEstimates &&
     isUnknownLow &&
     customEstimatedTime &&
     customEstimatedTime !== 'unknown' &&
@@ -73,11 +73,12 @@ export const useCustomTimeEstimate = ({
   ) {
     waitTimeEstimate = Number(customEstimatedTime?.upperTimeBound);
   } else if (
-    Number(maxPriorityFeePerGas) >= Number(medium.suggestedMaxPriorityFeePerGas)
+    Number(maxPriorityFeePerGas) >=
+    Number(gasFeeEstimates?.medium.suggestedMaxPriorityFeePerGas)
   ) {
-    waitTimeEstimate = high.minWaitTimeEstimate;
+    waitTimeEstimate = gasFeeEstimates?.high.minWaitTimeEstimate;
   } else {
-    waitTimeEstimate = low.maxWaitTimeEstimate;
+    waitTimeEstimate = gasFeeEstimates?.low.maxWaitTimeEstimate;
   }
 
   return { waitTimeEstimate };
