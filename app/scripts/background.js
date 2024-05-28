@@ -631,7 +631,7 @@ export function setupController(
   /**
    * Connects a Port to the MetaMask controller via a multiplexed duplex stream.
    * This method identifies trusted (MetaMask) interfaces, and connects them differently from untrusted (web pages).
-   *
+   * 来自网页的连接
    * @param {Port} remotePort - The port provided by a new context.
    */
   connectRemote = async (remotePort) => {
