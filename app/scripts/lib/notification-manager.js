@@ -67,6 +67,7 @@ export default class NotificationManager extends EventEmitter {
         left = Math.max(screenX + (outerWidth - NOTIFICATION_WIDTH), 0);
       }
 
+      console.log('notification.html');
       const popupWindow = await this.platform.openWindow({
         url: 'notification.html',
         type: 'popup',
@@ -88,6 +89,7 @@ export default class NotificationManager extends EventEmitter {
   }
 
   _onWindowClosed(windowId) {
+    console.log('WindowID: ', windowId);
     if (windowId === this._popupId) {
       this._setCurrentPopupId(undefined);
       this._popupId = undefined;

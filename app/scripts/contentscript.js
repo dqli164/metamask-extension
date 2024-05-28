@@ -211,6 +211,7 @@ const setupPageStreams = () => {
   );
 
   pageChannel = pageMux.createStream(PROVIDER);
+  console.log('InPage和背景脚本建立连接');
 };
 
 // The field below is used to ensure that replay is done only once for each restart.
@@ -222,6 +223,8 @@ const setupExtensionStreams = () => {
   extensionStream = new PortStream(extensionPort);
   extensionStream.on('data', extensionStreamMessageListener);
 
+  console.log('内容脚本和背景脚本建立连接');
+  console.log('port name in content script: ', extensionPort.name);
   // create and connect channel muxers
   // so we can handle the channels individually
   extensionMux = new ObjectMultiplex();

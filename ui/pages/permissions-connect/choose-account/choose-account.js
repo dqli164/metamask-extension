@@ -30,9 +30,11 @@ const ChooseAccount = ({
   const [selectedAccounts, setSelectedAccounts] = useState(
     selectedAccountAddresses,
   );
+  console.log('accounts: ', selectAccounts);
   const t = useI18nContext();
 
   const handleAccountClick = (address) => {
+    console.log('account click: ', address);
     const newSelectedAccounts = new Set(selectedAccounts);
     if (newSelectedAccounts.has(address)) {
       newSelectedAccounts.delete(address);

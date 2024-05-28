@@ -23,6 +23,7 @@ export default class PageContainerFooter extends Component {
     t: PropTypes.func,
   };
 
+  // onSubmit方法入口
   render() {
     const {
       children,
@@ -62,7 +63,7 @@ export default class PageContainerFooter extends Component {
             type={submitButtonType || 'primary'}
             large={buttonSizeLarge}
             className={classnames(
-              'page-container__footer-button',
+              'page-container__footer-button hah',
               footerButtonClassName,
             )}
             disabled={disabled}

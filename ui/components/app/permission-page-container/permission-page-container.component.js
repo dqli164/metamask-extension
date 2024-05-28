@@ -152,6 +152,8 @@ export default class PermissionPageContainer extends Component {
     };
 
     if (Object.keys(request.permissions).length > 0) {
+      console.log('permissions: ', request.permissions);
+      console.log('request in PermissionPageContainer: ', request, ' ::');
       approvePermissionsRequest(request);
     } else {
       rejectPermissionsRequest(request.metadata.id);
@@ -211,7 +213,7 @@ export default class PermissionPageContainer extends Component {
             <PermissionsConnectFooter />
           )}
           <PageContainerFooter
-            footerClassName="permission-page-container-footer"
+            footerClassName="permission-page-container-footer fii"
             cancelButtonType="default"
             onCancel={() => this.goBack()}
             cancelText={this.context.t('back')}

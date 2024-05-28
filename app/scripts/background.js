@@ -196,13 +196,17 @@ const sendReadyMessageToTabs = async () => {
 let connectRemote;
 let connectExternal;
 
+// 内部脚本连接请求(如content-script)
 browser.runtime.onConnect.addListener(async (...args) => {
   // Queue up connection attempts here, waiting until after initialization
   await isInitialized;
 
+  console.log('args----------------: ', ...args);
   // This is set in `setupController`, which is called as part of initialization
   connectRemote(...args);
 });
+
+// 外部脚本连接请求(其它扩展)
 browser.runtime.onConnectExternal.addListener(async (...args) => {
   // Queue up connection attempts here, waiting until after initialization
   await isInitialized;
@@ -307,6 +311,13 @@ async function initialize() {
       await browser.storage.session.set({ isFirstMetaMaskControllerSetup });
     }
 
+    console.log('initState: ', initState);
+    console.log('initLangCode: ', initLangCode);
+    console.log('initData: ', initData);
+    console.log(
+      'isFirstMetaMaskControllerSetup: ',
+      isFirstMetaMaskControllerSetup,
+    );
     setupController(
       initState,
       initLangCode,
@@ -621,6 +632,7 @@ export function setupController(
    *
    * @param {Port} remotePort - The port provided by a new context.
    */
+  /* 处理来自不同来源的连接请求 */
   connectRemote = async (remotePort) => {
     ///: BEGIN:ONLY_INCLUDE_IF(desktop)
     if (
@@ -643,6 +655,8 @@ export function setupController(
     ///: END:ONLY_INCLUDE_IF
 
     const processName = remotePort.name;
+    console.log('metamaskBlockedPorts: ', metamaskBlockedPorts);
+    console.log('remotePortName: ', remotePort.name);
 
     if (metamaskBlockedPorts.includes(remotePort.name)) {
       return;
@@ -713,6 +727,7 @@ export function setupController(
     ) {
       const portStream =
         overrides?.getPortStream?.(remotePort) || new PortStream(remotePort);
+      console.log('portStream:------------ ', portStream);
       controller.setupPhishingCommunication({
         connectionStream: portStream,
       });
@@ -730,6 +745,7 @@ export function setupController(
         const connectSitePermissions =
           controller.permissionController.state.subjects[origin];
         // when the dapp is not connected, connectSitePermissions is undefined
+        // 是否登录过
         const isConnectedToDapp = connectSitePermissions !== undefined;
         // when open a new tab, this event will trigger twice, only 2nd time is with dapp loaded
         const isTabLoaded = remotePort.sender.tab.title !== 'New Tab';
@@ -745,12 +761,18 @@ export function setupController(
           );
         }
 
+        // 外部连接,添加消息监听器
+        // 存储标签ID和Origin
         remotePort.onMessage.addListener((msg) => {
           if (
             msg.data &&
             msg.data.method === MESSAGE_TYPE.ETH_REQUEST_ACCOUNTS
           ) {
+            console.log('msg: ', msg);
+            console.log('origin: ', origin);
             requestAccountTabIds[origin] = tabId;
+            console.log('remotePort', remotePort);
+            console.log('requestAccountTabIds', requestAccountTabIds);
           }
         });
       }
@@ -760,6 +782,7 @@ export function setupController(
 
   // communication with page or other extension
   connectExternal = (remotePort) => {
+    console.log('remotePort in connectExternal: ', remotePort);
     ///: BEGIN:ONLY_INCLUDE_IF(desktop)
     if (
       DesktopManager.isDesktopEnabled() &&
@@ -772,12 +795,14 @@ export function setupController(
 
     const portStream =
       overrides?.getPortStream?.(remotePort) || new PortStream(remotePort);
+
     controller.setupUntrustedCommunication({
       connectionStream: portStream,
       sender: remotePort.sender,
     });
   };
 
+  console.log('overrides: ', overrides);
   if (overrides?.registerConnectListeners) {
     overrides.registerConnectListeners(connectRemote, connectExternal);
   }
@@ -847,6 +872,7 @@ export function setupController(
     return count;
   }
 
+  // 监听Popup页面关闭事件
   notificationManager.on(
     NOTIFICATION_MANAGER_EVENTS.POPUP_CLOSED,
     ({ automaticallyClosed }) => {
@@ -860,6 +886,7 @@ export function setupController(
     },
   );
 
+  // eslint-disable-next-line no-unused-vars
   function rejectUnapprovedNotifications() {
     controller.signatureController.rejectUnapproved(
       REJECT_NOTIFICATION_CLOSE_SIG,
@@ -1006,6 +1033,7 @@ function onNavigateToTab() {
           controller.permissionController.state.subjects[currentOrigin];
         // when the dapp is not connected, connectSitePermissions is undefined
         const isConnectedToDapp = connectSitePermissions !== undefined;
+        console.log('connectSitePermissions: ', connectSitePermissions);
         if (isConnectedToDapp) {
           emitDappViewedMetricEvent(
             currentOrigin,
@@ -1031,5 +1059,6 @@ async function initBackground() {
 }
 
 if (!process.env.SKIP_BACKGROUND_INITIALIZATION) {
+  console.log('initialize: ', process.env.SKIP_BACKGROUND_INITIALIZATION);
   initBackground();
 }

@@ -6,8 +6,9 @@ setTimeout(() => {
   const scriptsToLoad = [
     /* SCRIPTS */
   ];
-
+  /* 动态加载脚本 */
   const loadScript = (src) => {
+    console.log('script: ', src);
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.async = true;

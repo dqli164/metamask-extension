@@ -1858,6 +1858,7 @@ export function removePermittedAccount(
 ): ThunkAction<void, MetaMaskReduxState, unknown, AnyAction> {
   return async (dispatch: MetaMaskReduxDispatch) => {
     await new Promise<void>((resolve, reject) => {
+      // 断开连接
       callBackgroundMethod(
         'removePermittedAccount',
         [origin, address],
@@ -3876,7 +3877,7 @@ export function requestAccountsPermissionWithId(
 }
 
 /**
- * Approves the permissions request.
+ * Approves the permissions request. 授权接口
  *
  * @param request - The permissions request to approve.
  */
@@ -3884,6 +3885,7 @@ export function approvePermissionsRequest(
   request: PermissionsRequest,
 ): ThunkAction<void, MetaMaskReduxState, unknown, AnyAction> {
   return (dispatch: MetaMaskReduxDispatch) => {
+    console.log('callBackgroundMethod: ', request);
     callBackgroundMethod('approvePermissionsRequest', [request], (err) => {
       if (err) {
         dispatch(displayWarning(err));

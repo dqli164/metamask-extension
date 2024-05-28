@@ -41,6 +41,7 @@ export default class ExtensionStore {
       // we format the data for storage as an object with the "data" key for the controller state object
       // and the "meta" key for a metadata object containing a version number that tracks how the data shape
       // has changed using migrations to adapt to backwards incompatible changes
+      console.log('local storage: key', state, 'metadata: ', this.metadata);
       await this._set({ data: state, meta: this.metadata });
       if (this.dataPersistenceFailing) {
         this.dataPersistenceFailing = false;

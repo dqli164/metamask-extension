@@ -42,6 +42,7 @@ export default class PermissionPageContainerContent extends PureComponent {
     const { selectedPermissions, selectedAccounts, subjectMetadata } =
       this.props;
 
+    console.log('accounts: ', selectedAccounts);
     const accounts = selectedAccounts.reduce((accumulator, account) => {
       accumulator.push({
         avatarValue: account.address,

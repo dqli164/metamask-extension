@@ -4738,6 +4738,7 @@ export default class MetamaskController extends EventEmitter {
     // setup multiplexing
     const mux = setupMultiplex(connectionStream);
 
+    // 页面与背景脚本之间的通信
     // messages between inpage and background
     this.setupProviderConnection(
       mux.createStream('metamask-provider'),
@@ -5334,6 +5335,7 @@ export default class MetamaskController extends EventEmitter {
     if (origin === ORIGIN_METAMASK) {
       return null;
     }
+    console.log('connections: -----------', this.connections);
 
     if (!this.connections[origin]) {
       this.connections[origin] = {};
@@ -5925,6 +5927,7 @@ export default class MetamaskController extends EventEmitter {
   };
 
   acceptPermissionsRequest = (request) => {
+    console.log('MetamaskController request: ', request);
     try {
       this.permissionController.acceptPermissionsRequest(request);
     } catch (exp) {
