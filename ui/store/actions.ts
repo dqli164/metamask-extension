@@ -5562,3 +5562,15 @@ export function setIsProfileSyncingEnabled(
     }
   };
 }
+
+export async function getNextAvailableAccountName(): ThunkAction<
+  string,
+  unknown,
+  unknown,
+  AnyAction
+> {
+  return await submitRequestToBackground<string>(
+    'getNextAvailableAccountName',
+    [],
+  );
+}
